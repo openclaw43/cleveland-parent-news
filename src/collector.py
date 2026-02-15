@@ -7,6 +7,7 @@ import yaml
 
 from .rss_feeds import RSSFeedParser
 from .scrapers import WebScraper
+from .browser_scraper import BrowserScraper
 from .filters import ContentFilter
 from .database import ArticleDatabase
 
@@ -63,9 +64,27 @@ class NewsCollector:
     def collect_scraped_content(self) -> List[Dict[str, Any]]:
         logger.info("Starting web scraping...")
         sources = self.config.get('scrapers', [])
-        items = self.web_scraper.scrape_all_sources(sources)
-        logger.info(f"Scraped {len(items)} items from web sources")
-        return items
+        
+        # Separate JS-rendered vs static sites
+        static_sources = [s for s in sources if s.get('enabled', True) and 'JavaScript' not in s.get('notes', '')]
+        js_sources = [s for s in sources if s.get('enabled') and 'JavaScript' in s.get('notes', '')]
+        
+        # Static scraping
+        static_items = self.web_scraper.scrape_all_sources(static_sources)
+        logger.info(f"Scraped {len(static_items)} items from static sources")
+        
+        # Browser scraping for JS sites
+        js_items = []
+        if js_sources:
+            logger.info(f"Starting browser scraping for {len(js_sources)} JS-rendered sites...")
+            try:
+                browser_scraper = BrowserScraper(headless=True)
+                js_items = browser_scraper.scrape_all(js_sources)
+                logger.info(f"Scraped {len(js_items)} items from browser sources")
+            except Exception as e:
+                logger.error(f"Browser scraping failed: {e}")
+        
+        return static_items + js_items
 
     def process_articles(self, articles: List[Dict[str, Any]]) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         logger.info("Filtering articles for parent relevance...")

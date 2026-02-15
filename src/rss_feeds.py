@@ -1,6 +1,7 @@
 import feedparser
 import logging
 import time
+import requests
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 import hashlib
@@ -26,6 +27,21 @@ class RSSFeedParser:
         content = f"{url}|{title}"
         return hashlib.md5(content.encode()).hexdigest()
 
+    def _fetch_feed_with_encoding(self, feed_url: str) -> bytes:
+        """Fetch feed with proper encoding handling."""
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(feed_url, headers=headers, timeout=30)
+        response.raise_for_status()
+        
+        # Try to detect encoding from response
+        if response.encoding and response.encoding.lower() != 'utf-8':
+            # Re-encode to ensure UTF-8
+            content = response.content.decode(response.encoding, errors='replace').encode('utf-8')
+            return content
+        return response.content
+
     def parse_feed(self, feed_config: Dict[str, Any]) -> List[Dict[str, Any]]:
         articles = []
         feed_name = feed_config.get('name', 'Unknown')
@@ -41,10 +57,19 @@ class RSSFeedParser:
             self._rate_limit()
             logger.info(f"Fetching RSS feed: {feed_name} - {feed_url}")
             
-            feed = feedparser.parse(
-                feed_url,
-                request_headers={'User-Agent': 'ClevelandParentNews/1.0'}
-            )
+            # Use manual fetch for feeds with known encoding issues
+            if 'cleveland.com' in feed_url or 'wkyc.com' in feed_url:
+                try:
+                    feed_content = self._fetch_feed_with_encoding(feed_url)
+                    feed = feedparser.parse(feed_content)
+                except Exception as fetch_err:
+                    logger.warning(f"Manual fetch failed for {feed_name}, trying direct: {fetch_err}")
+                    feed = feedparser.parse(feed_url)
+            else:
+                feed = feedparser.parse(
+                    feed_url,
+                    request_headers={'User-Agent': 'ClevelandParentNews/1.0'}
+                )
 
             if feed.bozo and feed.bozo_exception:
                 logger.warning(f"Feed parsing warning for {feed_name}: {feed.bozo_exception}")
