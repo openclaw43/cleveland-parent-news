@@ -1,0 +1,87 @@
+{
+  "timestamp": "20260215_120000",
+  "total_collected": 45,
+  "rss_articles": 30,
+  "scraped_items": 15,
+  "relevant_articles": 12,
+  "filtered_out": 33,
+  "database_inserted": 12,
+  "filter_summary": {
+    "total_articles": 12,
+    "by_category": {
+      "education_family": 5,
+      "activities_health": 4,
+      "events": 3
+    },
+    "by_relevance": {
+      "high": 4,
+      "medium": 6,
+      "low": 2
+    },
+    "top_keywords": {
+      "school": 8,
+      "family": 6,
+      "children": 5,
+      "education": 4,
+      "park": 3,
+      "library": 3,
+      "event": 2,
+      "health": 2
+    },
+    "by_source": {
+      "Cleveland.com": 3,
+      "CMSD News": 2,
+      "Cleveland Metroparks Events": 2,
+      "Cleveland Public Library Events": 2,
+      "WKYC News 5 Cleveland": 1,
+      "Fox 8 Cleveland": 1,
+      "Cleveland Museum of Natural History": 1
+    }
+  },
+  "sample_articles": [
+    {
+      "id": "abc123",
+      "title": "CMSD Announces New STEM Initiative for Elementary Students",
+      "url": "https://www.clevelandmetroschools.org/news/stem-initiative",
+      "description": "Cleveland Metropolitan School District launches a comprehensive STEM program across 15 elementary schools.",
+      "source": "CMSD News",
+      "category": "education",
+      "filter_score": 8.5,
+      "relevance_level": "high",
+      "matched_keywords": ["school", "education", "student", "children"]
+    },
+    {
+      "id": "def456",
+      "title": "Family Day at Cleveland Metroparks Zoo - Free Admission",
+      "url": "https://www.clevelandmetroparks.com/zoo/family-day",
+      "description": "Join us for a special family day with activities for kids of all ages. Free admission for Cleveland residents.",
+      "source": "Cleveland Metroparks Events",
+      "category": "events",
+      "filter_score": 7.0,
+      "relevance_level": "high",
+      "matched_keywords": ["family", "park", "kids", "children"]
+    },
+    {
+      "id": "ghi789",
+      "title": "Cleveland Public Library Launches Summer Reading Program",
+      "url": "https://cpl.org/events/summer-reading",
+      "description": "Register your children for the annual summer reading challenge with prizes and events throughout the season.",
+      "source": "Cleveland Public Library Events",
+      "category": "events",
+      "filter_score": 6.5,
+      "relevance_level": "medium",
+      "matched_keywords": ["library", "children", "family", "kids"]
+    },
+    {
+      "id": "jkl012",
+      "title": "New Playground Opens at Edgewater Park",
+      "url": "https://www.cleveland.com/news/edgewater-playground",
+      "description": "The renovated playground features accessible equipment for children with disabilities.",
+      "source": "Cleveland.com",
+      "category": "local_news",
+      "filter_score": 6.0,
+      "relevance_level": "medium",
+      "matched_keywords": ["park", "playground", "children", "family"]
+    }
+  ]
+}

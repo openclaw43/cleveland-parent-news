@@ -1,0 +1,135 @@
+rss_feeds:
+  - name: "Cleveland.com Local News"
+    url: "https://www.cleveland.com/news/index.rss"
+    category: "local_news"
+    priority: 1
+  
+  - name: "WKYC News 5 Cleveland"
+    url: "https://www.wkyc.com/rss/news"
+    category: "local_news"
+    priority: 1
+  
+  - name: "Fox 8 Cleveland"
+    url: "https://fox8.com/feed/"
+    category: "local_news"
+    priority: 1
+  
+  - name: "Axios Cleveland"
+    url: "https://api.axios.com/feed/"
+    category: "local_news"
+    priority: 2
+  
+  - name: "Cleveland Scene"
+    url: "https://www.clevescene.com/rss"
+    category: "entertainment"
+    priority: 2
+
+scrapers:
+  - name: "Cleveland Metroparks Events"
+    url: "https://www.clevelandmetroparks.com/parks/visit/events"
+    type: "events"
+    priority: 1
+    selectors:
+      event_container: ".event-item"
+      title: ".event-title"
+      date: ".event-date"
+      description: ".event-description"
+      link: "a"
+  
+  - name: "Cleveland Museum of Natural History"
+    url: "https://www.cmnh.org/plan-your-visit/calendar"
+    type: "events"
+    priority: 1
+    selectors:
+      event_container: ".event-card"
+      title: ".card-title"
+      date: ".event-date"
+      description: ".card-text"
+      link: "a"
+  
+  - name: "Cleveland Public Library Events"
+    url: "https://cpl.org/events/"
+    type: "events"
+    priority: 1
+    selectors:
+      event_container: ".event-item, .tribe-events-calendar"
+      title: ".event-title, .tribe-events-list-event-title"
+      date: ".event-date, .tribe-events-event-meta"
+      description: ".event-description, .tribe-events-list-event-description"
+      link: "a"
+  
+  - name: "CMSD News"
+    url: "https://www.clevelandmetroschools.org/news"
+    type: "news"
+    priority: 1
+    selectors:
+      article_container: ".news-item, .article-card"
+      title: "h2, h3, .title"
+      date: ".date, time"
+      description: "p, .summary"
+      link: "a"
+
+rate_limiting:
+  default_delay: 1.0
+  max_requests_per_minute: 30
+  timeout: 30
+
+parent_keywords:
+  high_priority:
+    - "school"
+    - "schools"
+    - "education"
+    - "kids"
+    - "children"
+    - "child"
+    - "family"
+    - "parent"
+    - "parents"
+    - "student"
+    - "students"
+    - "teacher"
+    - "teachers"
+    - "CMSD"
+    - "Cleveland Metropolitan School District"
+  
+  medium_priority:
+    - "youth"
+    - "teen"
+    - "teens"
+    - "toddler"
+    - "baby"
+    - "infant"
+    - "preschool"
+    - "kindergarten"
+    - "elementary"
+    - "middle school"
+    - "high school"
+    - "sports"
+    - "recreation"
+    - "park"
+    - "parks"
+    - "library"
+    - "museum"
+    - "zoo"
+    - "camp"
+    - "camps"
+    - "after-school"
+    - "tutoring"
+    - "safety"
+    - "health"
+    - "vaccination"
+    - "immunization"
+  
+  event_keywords:
+    - "family event"
+    - "kids event"
+    - "children's program"
+    - "storytime"
+    - "craft"
+    - "workshop"
+    - "class"
+    - "activities"
+    - "playground"
+    - "play date"
+    - "family fun"
+    - "kid-friendly"
