@@ -29,6 +29,8 @@ scrapers:
     url: "https://www.clevelandmetroparks.com/parks/visit/events"
     type: "events"
     priority: 1
+    enabled: false
+    notes: "JavaScript-rendered, requires browser automation"
     selectors:
       event_container: ".event-item"
       title: ".event-title"
@@ -37,20 +39,23 @@ scrapers:
       link: "a"
   
   - name: "Cleveland Museum of Natural History"
-    url: "https://www.cmnh.org/plan-your-visit/calendar"
+    url: "https://www.cmnh.org/explore/calendar"
     type: "events"
     priority: 1
+    enabled: true
     selectors:
-      event_container: ".event-card"
-      title: ".card-title"
-      date: ".event-date"
-      description: ".card-text"
+      event_container: ".event-card, .card"
+      title: ".card-title, h3"
+      date: ".event-date, .date"
+      description: ".card-text, .description"
       link: "a"
   
   - name: "Cleveland Public Library Events"
     url: "https://cpl.org/events/"
     type: "events"
     priority: 1
+    enabled: false
+    notes: "403 Forbidden - requires headers/cookies"
     selectors:
       event_container: ".event-item, .tribe-events-calendar"
       title: ".event-title, .tribe-events-list-event-title"
@@ -62,11 +67,25 @@ scrapers:
     url: "https://www.clevelandmetroschools.org/news"
     type: "news"
     priority: 1
+    enabled: false
+    notes: "URL requires verification"
     selectors:
       article_container: ".news-item, .article-card"
       title: "h2, h3, .title"
       date: ".date, time"
       description: "p, .summary"
+      link: "a"
+  
+  - name: "Cleveland Magazine"
+    url: "https://www.clevelandmagazine.com/news/"
+    type: "news"
+    priority: 2
+    enabled: true
+    selectors:
+      article_container: "article, .article-preview"
+      title: "h2, h3, .headline"
+      date: ".date, time"
+      description: ".summary, .description"
       link: "a"
 
 rate_limiting:
