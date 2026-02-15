@@ -252,40 +252,46 @@ ${news_section}
 
 
 def main():
-    test_articles = [
-        {
-            'title': 'CMSD Announces New STEM Program',
-            'url': 'https://example.com/stem',
-            'source': 'CMSD News',
-            'description': 'Cleveland Metropolitan School District launches innovative STEM program for elementary students.',
-            'matched_keywords': ['school', 'education', 'student'],
-            'filter_score': 8.5
-        },
-        {
-            'title': 'Free Storytime at Cleveland Public Library',
-            'url': 'https://example.com/storytime',
-            'source': 'Cleveland Public Library',
-            'description': 'Join us for weekly storytime sessions for children ages 2-5.',
-            'matched_keywords': ['library', 'children', 'family'],
-            'filter_score': 7.0
-        },
-        {
-            'title': 'Family Day at Cleveland Metroparks Zoo',
-            'url': 'https://example.com/zoo',
-            'source': 'Cleveland Metroparks',
-            'description': 'Special family-friendly event with activities for all ages.',
-            'matched_keywords': ['family', 'park', 'kids'],
-            'filter_score': 6.5
-        }
-    ]
+    """Generate newsletter from database articles."""
+    from .database import ArticleDatabase
+    
+    db = ArticleDatabase()
+    
+    # Get recent articles from last 7 days
+    articles = db.get_articles(limit=30)
+    
+    if not articles:
+        print("No articles found in database. Run 'uv run python -m src.collector' first.")
+        return
+    
+    # Get issue number from database
+    issue_number = db.get_collection_count() + 1
     
     generator = NewsletterGenerator()
-    post = generator.generate_substack_post(test_articles, issue_number=1)
+    post = generator.generate_substack_post(articles, issue_number=issue_number)
     
-    print(f"\nTitle: {post['title']}")
-    print(f"Subtitle: {post['subtitle']}")
-    print(f"\n--- MARKDOWN BODY ---\n")
-    print(post['body'])
+    # Save outputs
+    output_dir = 'data/processed'
+    import os
+    os.makedirs(output_dir, exist_ok=True)
+    
+    timestamp = datetime.now().strftime('%Y%m%d')
+    md_file = os.path.join(output_dir, f'newsletter_{timestamp}.md')
+    html_file = os.path.join(output_dir, f'newsletter_{timestamp}.html')
+    
+    with open(md_file, 'w', encoding='utf-8') as f:
+        f.write(post['body'])
+    
+    with open(html_file, 'w', encoding='utf-8') as f:
+        f.write(post['html'])
+    
+    print(f"\n✅ Newsletter generated!")
+    print(f"   Issue: #{issue_number}")
+    print(f"   Articles: {len(articles)}")
+    print(f"   Markdown: {md_file}")
+    print(f"   HTML: {html_file}")
+    print(f"\n--- PREVIEW ---\n")
+    print(post['body'][:800] + "...\n[truncated for display]")
 
 
 if __name__ == '__main__':

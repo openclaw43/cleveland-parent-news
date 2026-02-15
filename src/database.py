@@ -254,6 +254,14 @@ class ArticleDatabase:
             logger.info(f"Cleaned up {deleted} old articles")
             return deleted
 
+    def get_collection_count(self) -> int:
+        """Get number of collection runs for newsletter issue numbering."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT COUNT(*) FROM collection_runs')
+            result = cursor.fetchone()
+            return result[0] if result else 0
+
 
 def main():
     db = ArticleDatabase()
